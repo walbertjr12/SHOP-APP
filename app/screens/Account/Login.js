@@ -1,32 +1,39 @@
-import React from "react";
+import React, { useRef } from "react";
 import { StyleSheet, View, Text, ScrollView, Image } from "react-native";
 import { Divider } from "react-native-elements";
+import { useNavigation } from "@react-navigation/native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import Toast from "react-native-easy-toast";
+
+import LoginForm from "../../components/Account/LoginForm";
 
 export default function Login() {
+  const toastRef = useRef();
   return (
-    <ScrollView>
+    <KeyboardAwareScrollView>
       <Image
         source={require("../../../assets/img/shop-app-letras-icono-logo.png")}
         resizeMode="contain"
         style={styles.logo}
       />
       <View style={styles.viewContainer}>
-        <Text>Login FORM</Text>
+        <LoginForm toastRef={toastRef} />
         <CreateAccount />
       </View>
       <Divider style={styles.divider} />
-      <Text>Social Login</Text>
-    </ScrollView>
+      <Toast ref={toastRef} position="center" opacity={0.9} />
+    </KeyboardAwareScrollView>
   );
 }
 
 function CreateAccount(props) {
+  const navigation = useNavigation();
   return (
     <Text style={styles.textRegister}>
       ¿Aún no tienes una cuenta?{" "}
       <Text
         style={styles.btnRegister}
-        onPress={() => console.log("Registro....")}
+        onPress={() => navigation.navigate("register")}
       >
         Regístrate
       </Text>
