@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import { Input, Button } from "react-native-elements";
 import { size } from "lodash";
 import { reautenticate } from "../../utils/api";
@@ -55,6 +55,7 @@ export default function ChangePasswordForm(props) {
             .auth()
             .currentUser.updatePassword(formData.newPassword)
             .then(() => {
+              isSetError = false;
               setIsLoading(false);
               setShowModal(false);
               firebase.auth().signOut();
