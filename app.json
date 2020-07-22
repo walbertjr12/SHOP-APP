@@ -13,7 +13,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -21,6 +23,7 @@
       "favicon": "./assets/favicon.png"
     },
     "android": {
+      "package": "com.walbertjr.shopapp",
       "permissions": [
         "CAMERA_ROLL",
         "READ_EXTERNAL_STORAGE",
@@ -28,7 +31,12 @@
         "LOCATION",
         "ACCESS_COARSE_LOCATION",
         "ACCESS_FINE_LOCATION"
-      ]
+      ],
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyD4WKqtKa-3yYSHyyY7laU1jkV6Fh9t8VY"
+        }
+      }
     },
     "description": ""
   }

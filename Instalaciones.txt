@@ -20,3 +20,6 @@ yarn add expo-image-picker@8.3.0
 
 yarn add react-native-maps@0.27.1
 yarn add expo-location@8.2.1
+
+yarn add random-uuid-v4@0.0.9
+yarn add base-64@0.1.0

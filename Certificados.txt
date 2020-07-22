@@ -1,0 +1,6 @@
+Certificate fingerprints:
+         SHA1: 9F:4A:04:8D:EA:E9:0B:CB:47:15:F2:76:9F:97:13:83:5B:D9:58:AC
+         SHA256: B6:5B:CB:85:E8:8B:31:79:AF:9D:62:FF:82:C9:79:33:D2:C2:E6:FE:B4:B1:34:26:AB:95:27:5D:85:EC:DA:36
+Signature algorithm name: SHA256withRSA
+Subject Public Key Algorithm: 2048-bit RSA key
+Version: 3
