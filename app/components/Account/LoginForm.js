@@ -28,7 +28,7 @@ export default function LoginForm(props) {
         .signInWithEmailAndPassword(formData.email, formData.password)
         .then((response) => {
           setLoading(false);
-          navigation.navigate("account");
+          navigation.goBack();
         })
         .catch(() => {
           setLoading(false);
