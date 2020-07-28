@@ -25,7 +25,9 @@ export default function Restaurant(props) {
   const [userLogged, setUserLogged] = useState(false);
   const toastRef = useRef();
 
-  navigation.setOptions({ title: name.substr(0, 20) + "..." });
+  navigation.setOptions({
+    title: name.substr(0, 20),
+  });
 
   firebase.auth().onAuthStateChanged((user) => {
     user ? setUserLogged(true) : setUserLogged(false);
@@ -43,7 +45,7 @@ export default function Restaurant(props) {
           setRestaurant(data);
           setRating(data.rating);
         });
-    }, [])
+    }, [id])
   );
 
   useEffect(() => {
@@ -55,6 +57,8 @@ export default function Restaurant(props) {
         .then((response) => {
           if (response.docs.length === 1) {
             setIsFavorite(true);
+          } else {
+            setIsFavorite(false);
           }
         });
     }
