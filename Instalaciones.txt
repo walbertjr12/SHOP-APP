@@ -28,3 +28,5 @@ yarn add react-native-snap-carousel@3.9.0
 
 yarn add react-native-open-maps@0.3.5
 yarn add react-native-open-map
+
+yarn add expo-facebook@8.2.1
