@@ -10,16 +10,15 @@ import "firebase/firestore";
 import Carousel from "../../components/Carousel";
 import { Rating, ListItem, Icon } from "react-native-elements";
 import Map from "../../components/Map";
-import ListReviews from "../../components/Restaurants/ListReviews";
 import Toast from "react-native-easy-toast";
 
 const db = firebase.firestore(firebaseApp);
 const screeWidth = Dimensions.get("window").width;
 
-export default function Restaurant(props) {
+export default function Product(props) {
   const { navigation, route } = props;
   const { name, id } = route.params;
-  const [restaurant, setRestaurant] = useState(null);
+  const [product, setProduct] = useState(null);
   const [rating, setRating] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
   const [userLogged, setUserLogged] = useState(false);
@@ -35,23 +34,23 @@ export default function Restaurant(props) {
 
   useFocusEffect(
     useCallback(() => {
-      db.collection("restaurants")
+      db.collection("products")
         .doc(id)
         .get()
         .then((response) => {
           const data = response.data();
           data.id = response.id;
 
-          setRestaurant(data);
+          setProduct(data);
           setRating(data.rating);
         });
     }, [id])
   );
 
   useEffect(() => {
-    if (userLogged && restaurant) {
+    if (userLogged && product) {
       db.collection("favorites")
-        .where("idRestaurant", "==", restaurant.id)
+        .where("idProduct", "==", product.id)
         .where("idUser", "==", firebase.auth().currentUser.uid)
         .get()
         .then((response) => {
@@ -62,7 +61,7 @@ export default function Restaurant(props) {
           }
         });
     }
-  }, [userLogged, restaurant]);
+  }, [userLogged, product]);
 
   const addFavorite = () => {
     if (!userLogged) {
@@ -73,17 +72,17 @@ export default function Restaurant(props) {
       setIsFavorite(true);
       const payload = {
         idUser: firebase.auth().currentUser.uid,
-        idRestaurant: restaurant.id,
+        idProduct: product.id,
       };
 
       db.collection("favorites")
         .add(payload)
         .then(() => {
-          toastRef.current.show("Restaurante añadido a favoritos.");
+          toastRef.current.show("Producto añadido a favoritos.");
         })
         .catch(() => {
           setIsFavorite(false);
-          toastRef.current.show("Error al añadir el restaurante a favoritos.");
+          toastRef.current.show("Error al añadir el producto a favoritos.");
         });
     }
   };
@@ -91,7 +90,7 @@ export default function Restaurant(props) {
   const removeFavorite = () => {
     setIsFavorite(false);
     db.collection("favorites")
-      .where("idRestaurant", "==", restaurant.id)
+      .where("idProduct", "==", product.id)
       .where("idUser", "==", firebase.auth().currentUser.uid)
       .get()
       .then((response) => {
@@ -101,19 +100,19 @@ export default function Restaurant(props) {
             .doc(idFavorite)
             .delete()
             .then(() => {
-              toastRef.current.show("Restaurante eliminado de favoritos");
+              toastRef.current.show("Producto eliminado de favoritos");
             })
             .catch(() => {
               setIsFavorite(true);
               toastRef.current.show(
-                "Error al eliminar el restaurante de favoritos"
+                "Error al eliminar el producto de favoritos"
               );
             });
         });
       });
   };
 
-  if (!restaurant) return <Loading isVisible={true} text="Cargando..." />;
+  if (!product) return <Loading isVisible={true} text="Cargando..." />;
 
   return (
     <ScrollView vertical style={styles.viewBody}>
@@ -127,34 +126,25 @@ export default function Restaurant(props) {
           underlayColor="transparent"
         />
       </View>
-      <Carousel
-        arrayImages={restaurant.images}
-        height={250}
-        width={screeWidth}
-      />
-      <TitleRestaurant
-        name={restaurant.name}
-        description={restaurant.description}
+      <Carousel arrayImages={product.images} height={250} width={screeWidth} />
+      <TitleProduct
+        name={product.name}
+        description={product.description}
         rating={rating}
       />
-      <RestaurantInfo
-        location={restaurant.location}
-        name={restaurant.name}
-        address={restaurant.address}
-      />
-      <ListReviews navigation={navigation} idRestaurant={restaurant.id} />
+      <ProductInfo name={product.name} />
       <Toast ref={toastRef} position="center" opacity={0.9} />
     </ScrollView>
   );
 }
 
-function TitleRestaurant(props) {
+function TitleProduct(props) {
   const { name, description, rating } = props;
 
   return (
-    <View style={styles.viewRestaurantTitle}>
+    <View style={styles.viewProductTitle}>
       <View style={{ flexDirection: "row" }}>
-        <Text style={styles.nameRestaurant}>{name}</Text>
+        <Text style={styles.nameProduct}>{name}</Text>
         <Rating
           style={styles.rating}
           imageSize={20}
@@ -162,42 +152,26 @@ function TitleRestaurant(props) {
           startingValue={parseFloat(rating)}
         />
       </View>
-      <Text style={styles.descriptionRestaurant}>{description}</Text>
+      <Text style={styles.descriptionProduct}>{description}</Text>
     </View>
   );
 }
 
-function RestaurantInfo(props) {
-  const { location, name, address } = props;
+function ProductInfo(props) {
+  const { name } = props;
 
   const listInfo = [
-    {
-      text: address,
-      iconName: "map-marker",
-      iconType: "material-community",
-      action: null,
-    },
-    {
-      text: "+504 9655-9108",
-      iconName: "phone",
-      iconType: "material-community",
-      action: null,
-    },
-    {
-      text: "walbertdavid2000@gmail.com",
-      iconName: "at",
-      iconType: "material-community",
-      action: null,
-    },
+    // {
+    //   text: address,
+    //   iconName: "map-marker",
+    //   iconType: "material-community",
+    //   action: null,
+    // }
   ];
 
   return (
-    <View style={styles.viewRestaurantInfo}>
-      <Text style={styles.restaurantInfoTitle}>
-        Información sobre el restaurante
-      </Text>
-      <Map location={location} name={name} height={100} />
-
+    <View style={styles.viewProductInfo}>
+      <Text style={styles.productInfoTitle}>Información sobre el producto</Text>
       {map(listInfo, (item, index) => (
         <ListItem
           key={index}
@@ -219,14 +193,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
-  viewRestaurantTitle: {
+  viewProductTitle: {
     padding: 15,
   },
-  nameRestaurant: {
+  nameProduct: {
     fontSize: 20,
     fontWeight: "bold",
   },
-  descriptionRestaurant: {
+  descriptionProduct: {
     marginTop: 5,
     color: "grey",
   },
@@ -234,11 +208,11 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 0,
   },
-  viewRestaurantInfo: {
+  viewProductInfo: {
     margin: 15,
     marginTop: 0,
   },
-  restaurantInfoTitle: {
+  productInfoTitle: {
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,

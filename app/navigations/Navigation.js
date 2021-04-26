@@ -3,9 +3,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Icon } from "react-native-elements";
 
-import RestaurantsStack from "./RestaurantsStack";
 import FavoritesStack from "./FavoritesStack";
-import TopRestaurantsStack from "./TopRestaurantsStack";
+import ProductsStack from "./ProductsStack";
 import SearchStack from "./SearchStack";
 import AccountStack from "./AccountStack";
 
@@ -15,7 +14,7 @@ export default function Navigation() {
   return (
     <NavigationContainer>
       <Tab.Navigator
-        initialRouteName="restaurants"
+        initialRouteName="products"
         tabBarOptions={{
           inactiveTintColor: "#646464",
           activeTintColor: "#00a680",
@@ -25,19 +24,14 @@ export default function Navigation() {
         })}
       >
         <Tab.Screen
-          name="restaurants"
-          component={RestaurantsStack}
-          options={{ title: "Restaurantes" }}
+          name="products"
+          component={ProductsStack}
+          options={{ title: "Productos" }}
         />
         <Tab.Screen
           name="favorites"
           component={FavoritesStack}
           options={{ title: "Favoritos" }}
-        />
-        <Tab.Screen
-          name="top-restaurants"
-          component={TopRestaurantsStack}
-          options={{ title: "Top 5" }}
         />
         <Tab.Screen
           name="search"
@@ -58,14 +52,11 @@ function screenOptions(route, color) {
   let iconName;
 
   switch (route.name) {
-    case "restaurants":
+    case "products":
       iconName = "compass-outline";
       break;
     case "favorites":
       iconName = "heart-outline";
-      break;
-    case "top-restaurants":
-      iconName = "star-outline";
       break;
     case "search":
       iconName = "magnify";

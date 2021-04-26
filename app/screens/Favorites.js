@@ -20,8 +20,8 @@ import { Icon, Button, Image } from "react-native-elements";
 const db = firebase.firestore(firebaseApp);
 
 export default function Favorites(props) {
-  const { navigation, route } = props;
-  const [restaurants, setRestaurants] = useState(null);
+  const { navigation } = props;
+  const [products, setProducts] = useState(null);
   const [userLogged, setUserLogged] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [reloadData, setReloadData] = useState(false);
@@ -39,18 +39,18 @@ export default function Favorites(props) {
           .where("idUser", "==", idUser)
           .get()
           .then((response) => {
-            const idRestaurantsArray = [];
+            const idProductsArray = [];
             response.forEach((doc) => {
-              idRestaurantsArray.push(doc.data().idRestaurant);
+              idProductsArray.push(doc.data().idProduct);
             });
-            getDataRestaurant(idRestaurantsArray).then((response) => {
-              const restaurantsDb = [];
+            getDataProduct(idProductsArray).then((response) => {
+              const productsDb = [];
               response.forEach((doc) => {
-                const restaurant = doc.data();
-                restaurant.id = doc.id;
-                restaurantsDb.push(restaurant);
+                const product = doc.data();
+                product.id = doc.id;
+                productsDb.push(product);
               });
-              setRestaurants(restaurantsDb);
+              setProducts(productsDb);
             });
           });
       }
@@ -58,32 +58,32 @@ export default function Favorites(props) {
     }, [userLogged, reloadData])
   );
 
-  const getDataRestaurant = (idRestaurantsArray) => {
-    const arrayRestaurants = [];
-    idRestaurantsArray.forEach((idRestaurant) => {
-      const result = db.collection("restaurants").doc(idRestaurant).get();
-      arrayRestaurants.push(result);
+  const getDataProduct = (idProductsArray) => {
+    const arrayProducts = [];
+    idProductsArray.forEach((idProduct) => {
+      const result = db.collection("products").doc(idProduct).get();
+      arrayProducts.push(result);
     });
 
-    return Promise.all(arrayRestaurants);
+    return Promise.all(arrayProducts);
   };
 
   if (!userLogged) {
     return <UserNoLogged navigation={navigation} />;
   }
 
-  if (restaurants?.length === 0) {
-    return <NotFoundRestaurants />;
+  if (products?.length === 0) {
+    return <NotFoundProducts />;
   }
 
   return (
     <View style={styles.viewBody}>
-      {restaurants ? (
+      {products ? (
         <FlatList
-          data={restaurants}
-          renderItem={(restaurant) => (
-            <Restaurant
-              restaurant={restaurant}
+          data={products}
+          renderItem={(product) => (
+            <Product
+              product={product}
               setIsLoading={setIsLoading}
               toastRef={toastRef}
               setReloadData={setReloadData}
@@ -93,23 +93,23 @@ export default function Favorites(props) {
           keyExtractor={(item, index) => index.toString()}
         />
       ) : (
-        <View style={styles.loaderRestaurants}>
+        <View style={styles.loaderProducts}>
           <ActivityIndicator size="large" />
-          <Text style={{ textAlign: "center" }}>Cargando Restaurantes</Text>
+          <Text style={{ textAlign: "center" }}>Cargando Productos</Text>
         </View>
       )}
       <Toast ref={toastRef} position="center" opacity={0.9} />
-      <Loading text="Eliminando restaurante" isVisible={isLoading} />
+      <Loading text="Eliminando producto" isVisible={isLoading} />
     </View>
   );
 }
 
-function NotFoundRestaurants() {
+function NotFoundProducts() {
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Icon type="material-community" name="alert-outline" size={30} />
       <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-        No tienes restaurantes en tu lista
+        No tienes productos en tu lista
       </Text>
     </View>
   );
@@ -134,20 +134,14 @@ function UserNoLogged(props) {
   );
 }
 
-function Restaurant(props) {
-  const {
-    restaurant,
-    setIsLoading,
-    toastRef,
-    setReloadData,
-    navigation,
-  } = props;
-  const { name, images, id } = restaurant.item;
+function Product(props) {
+  const { product, setIsLoading, toastRef, setReloadData, navigation } = props;
+  const { name, images, id } = product.item;
 
   const confirmRemoveFavorite = () => {
     Alert.alert(
-      "Eliminar Restaurante de Favoritos",
-      "¿Estás seguro de que quieres eliminar el restaurante de favoritos?",
+      "Eliminar Producto de Favoritos",
+      "¿Estás seguro de que quieres eliminar el producto de favoritos?",
       [
         {
           text: "Cancelar",
@@ -165,7 +159,7 @@ function Restaurant(props) {
   const removeFavorite = () => {
     setIsLoading(true);
     db.collection("favorites")
-      .where("idRestaurant", "==", id)
+      .where("idProduct", "==", id)
       .where("idUser", "==", firebase.auth().currentUser.uid)
       .get()
       .then((response) => {
@@ -177,12 +171,12 @@ function Restaurant(props) {
             .then(() => {
               setIsLoading(false);
               setReloadData(true);
-              toastRef.current.show("Restaurante eliminado de favoritos");
+              toastRef.current.show("Producto eliminado de favoritos");
             })
             .catch(() => {
               setIsLoading(false);
               toastRef.current.show(
-                "Error al eliminar el restaurante de favoritos"
+                "Error al eliminar el producto de favoritos"
               );
             });
         });
@@ -190,11 +184,11 @@ function Restaurant(props) {
   };
 
   return (
-    <View style={styles.restaurant}>
+    <View style={styles.product}>
       <TouchableOpacity
         onPress={() =>
-          navigation.navigate("restaurants", {
-            screen: "restaurant",
+          navigation.navigate("products", {
+            screen: "product",
             params: { id, name },
           })
         }
@@ -232,11 +226,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#f2f2f2",
   },
-  loaderRestaurants: {
+  loaderProducts: {
     marginTop: 10,
     marginBottom: 10,
   },
-  restaurant: {
+  product: {
     margin: 10,
   },
   image: {

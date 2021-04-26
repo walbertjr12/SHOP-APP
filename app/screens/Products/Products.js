@@ -5,44 +5,44 @@ import { useFocusEffect } from "@react-navigation/native";
 import { firebaseApp } from "../../utils/firebase";
 import * as firebase from "firebase";
 import "firebase/firestore";
-import ListRestaurants from "../../components/Restaurants/ListRestaurants";
+import ListProducts from "../../components/Products/ListProducts";
 
 const db = firebase.firestore(firebaseApp);
 
 export default function Restaurants(props) {
   const { navigation } = props;
   const [user, setUser] = useState(null);
-  const [restaurants, setRestaurants] = useState([]);
-  const [totalRestaurants, setTotalRestaurants] = useState(0);
-  const [startRestaurants, setStartRestaurants] = useState(null);
+  const [products, setProducts] = useState([]);
+  const [totalProducts, setTotalProducts] = useState(0);
+  const [startProducts, setStartProducts] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const limitRestaurants = 10;
+  const limitProducts = 10;
 
   useFocusEffect(
     useCallback(() => {
-      db.collection("restaurants")
+      db.collection("products")
         .get()
         .then((snap) => {
-          setTotalRestaurants(snap.docs.length);
+          setTotalProducts(snap.docs.length);
         });
 
-      const resultRestaurants = [];
+      const resultProducts = [];
 
-      db.collection("restaurants")
+      db.collection("products")
         .orderBy("createAt", "desc")
-        .limit(limitRestaurants)
+        .limit(limitProducts)
         .get()
         .then((response) => {
-          setStartRestaurants(response.docs[response.docs.length - 1]);
+          setStartProducts(response.docs[response.docs.length - 1]);
 
           response.forEach((doc) => {
-            const restaurant = doc.data();
-            restaurant.id = doc.id;
-            resultRestaurants.push(restaurant);
+            const product = doc.data();
+            product.id = doc.id;
+            resultProducts.push(product);
           });
 
-          setRestaurants(resultRestaurants);
+          setProducts(resultProducts);
         });
     }, [])
   );
@@ -54,37 +54,36 @@ export default function Restaurants(props) {
   }, []);
 
   const handleLoadMore = () => {
-    const resultRestaurants = [];
+    const resultProducts = [];
 
-    restaurants.length < totalRestaurants && setIsLoading(true);
-    console.log(totalRestaurants);
+    products.length < totalProducts && setIsLoading(true);
 
-    db.collection("restaurants")
+    db.collection("products")
       .orderBy("createAt", "desc")
-      .startAfter(startRestaurants.data().createAt)
-      .limit(limitRestaurants)
+      .startAfter(startProducts.data().createAt)
+      .limit(limitProducts)
       .get()
       .then((response) => {
         if (response.docs.length > 0) {
-          setStartRestaurants(response.docs[response.docs.length - 1]);
+          setStartProducts(response.docs[response.docs.length - 1]);
         } else {
           setIsLoading(false);
         }
 
         response.forEach((doc) => {
-          const restaurant = doc.data();
-          restaurant.id = doc.id;
-          resultRestaurants.push(restaurant);
+          const product = doc.data();
+          product.id = doc.id;
+          resultProducts.push(product);
         });
 
-        setRestaurants([...restaurants, ...resultRestaurants]);
+        setProducts([...products, ...resultProducts]);
       });
   };
 
   return (
     <View style={styles.viewBody}>
-      <ListRestaurants
-        restaurants={restaurants}
+      <ListProducts
+        products={products}
         handleLoadMore={handleLoadMore}
         isLoading={isLoading}
       />
@@ -95,7 +94,7 @@ export default function Restaurants(props) {
           name="plus"
           color="#00a680"
           containerStyle={styles.btnContainer}
-          onPress={() => navigation.navigate("add-restaurant")}
+          onPress={() => navigation.navigate("add-product")}
         />
       )}
     </View>

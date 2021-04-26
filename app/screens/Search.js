@@ -9,14 +9,14 @@ const fireSQL = new FireSQL(firebase.firestore(), { includeId: "id" });
 export default function Search(props) {
   const { navigation } = props;
   const [search, setSearch] = useState("");
-  const [restaurants, setRestaurants] = useState([]);
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
     if (search) {
       fireSQL
-        .query(`SELECT * FROM restaurants WHERE name LIKE "${search}%"`)
+        .query(`SELECT * FROM products WHERE name LIKE "${search}%"`)
         .then((response) => {
-          setRestaurants(response);
+          setProducts(response);
         })
         .catch((error) => {
           console.log("error");
@@ -27,18 +27,18 @@ export default function Search(props) {
   return (
     <View>
       <SearchBar
-        placeholder="Busca tu restaurante"
+        placeholder="Busca tu producto"
         onChangeText={(e) => setSearch(e)}
         containerStyle={styles.searchBar}
         value={search}
       />
-      {restaurants.length === 0 ? (
-        <NotfoundRestaurants />
+      {products.length === 0 ? (
+        <NotfoundProducts />
       ) : (
         <FlatList
-          data={restaurants}
-          renderItem={(restaurant) => (
-            <Restaurant restaurant={restaurant} navigation={navigation} />
+          data={products}
+          renderItem={(product) => (
+            <Product product={product} navigation={navigation} />
           )}
         />
       )}
@@ -46,7 +46,7 @@ export default function Search(props) {
   );
 }
 
-function NotfoundRestaurants() {
+function NotfoundProducts() {
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
       <Image
@@ -58,9 +58,9 @@ function NotfoundRestaurants() {
   );
 }
 
-function Restaurant(props) {
-  const { navigation, restaurant } = props;
-  const { id, name, images } = restaurant.item;
+function Product(props) {
+  const { navigation, product } = props;
+  const { id, name, images } = product.item;
   return (
     <ListItem
       title={name}
@@ -71,8 +71,8 @@ function Restaurant(props) {
       }}
       rightIcon={<Icon type="material-community" name="chevron-right" />}
       onPress={() =>
-        navigation.navigate("restaurants", {
-          screen: "restaurant",
+        navigation.navigate("products", {
+          screen: "product",
           params: { id, name },
         })
       }

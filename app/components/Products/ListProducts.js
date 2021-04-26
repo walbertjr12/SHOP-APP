@@ -11,17 +11,17 @@ import { Image } from "react-native-elements";
 import { size } from "lodash";
 import { useNavigation } from "@react-navigation/native";
 
-export default function ListRestaurants(props) {
-  const { restaurants, handleLoadMore, isLoading } = props;
+export default function ListProducts(props) {
+  const { products, handleLoadMore, isLoading } = props;
   const navigation = useNavigation();
 
   return (
     <View>
-      {size(restaurants) > 0 ? (
+      {size(products) > 0 ? (
         <FlatList
-          data={restaurants}
-          renderItem={(restaurant) => (
-            <Restaurant restaurant={restaurant} navigation={navigation} />
+          data={products}
+          renderItem={(product) => (
+            <Product product={product} navigation={navigation} />
           )}
           keyExtractor={(item, index) => index.toString()}
           onEndReachedThreshold={0.5}
@@ -29,48 +29,45 @@ export default function ListRestaurants(props) {
           ListFooterComponent={<FooterList isLoading={isLoading} />}
         />
       ) : (
-        <View style={styles.loaderRestaurants}>
+        <View style={styles.loaderProducts}>
           <ActivityIndicator size="large" />
-          <Text>Cargando restaurantes</Text>
+          <Text>Cargando Productos</Text>
         </View>
       )}
     </View>
   );
 }
 
-function Restaurant(props) {
-  const { restaurant, navigation } = props;
-  const { id, images, name, address, description } = restaurant.item;
-  const imageRestaurant = images[0];
+function Product(props) {
+  const { product, navigation } = props;
+  const { id, images, name, description } = product.item;
+  const imageProduct = images[0];
 
-  const goRestaurant = () => {
-    console.log(navigation);
-
-    navigation.navigate("restaurant", {
+  const goProduct = () => {
+    navigation.navigate("product", {
       id,
       name,
     });
   };
 
   return (
-    <TouchableOpacity onPress={goRestaurant}>
-      <View style={styles.viewRestaurant}>
-        <View style={styles.viewRestaurantImage}>
+    <TouchableOpacity onPress={goProduct}>
+      <View style={styles.viewProduct}>
+        <View style={styles.viewProductImage}>
           <Image
             resizeMode="cover"
             PlaceholderContent={<ActivityIndicator color="#fff" />}
             source={
-              imageRestaurant
-                ? { uri: imageRestaurant }
+              imageProduct
+                ? { uri: imageProduct }
                 : require("../../../assets/img/no-image.png")
             }
-            style={styles.imageRestaurant}
+            style={styles.imageProduct}
           />
         </View>
         <View>
-          <Text style={styles.restaurantName}>{name}</Text>
-          <Text style={styles.restaurantAddress}>{address}</Text>
-          <Text style={styles.restaurantDescription}>
+          <Text style={styles.productName}>{name}</Text>
+          <Text style={styles.productDescription}>
             {description.substr(0, 60)}...
           </Text>
         </View>
@@ -84,49 +81,45 @@ function FooterList(props) {
 
   if (isLoading) {
     return (
-      <View style={styles.loaderRestaurants}>
+      <View style={styles.loaderProducts}>
         <ActivityIndicator size="large" />
       </View>
     );
   } else {
     return (
-      <View style={styles.notFoundRestaurants}>
-        <Text>No quedan más restaurantes por cargar</Text>
+      <View style={styles.notFoundProducts}>
+        <Text>No quedan más productos por cargar</Text>
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  loaderRestaurants: {
+  loaderProducts: {
     marginTop: 10,
     marginBottom: 10,
     alignItems: "center",
   },
-  viewRestaurant: {
+  viewProduct: {
     flexDirection: "row",
     margin: 10,
   },
-  viewRestaurantImage: {
+  viewProductImage: {
     marginRight: 15,
   },
-  imageRestaurant: {
+  imageProduct: {
     width: 80,
     height: 80,
   },
-  restaurantName: {
+  productName: {
     fontWeight: "bold",
   },
-  restaurantAddress: {
-    paddingTop: 2,
-    color: "grey",
-  },
-  restaurantDescription: {
+  productDescription: {
     paddingTop: 2,
     color: "grey",
     width: 300,
   },
-  notFoundRestaurants: {
+  notFoundProducts: {
     marginTop: 10,
     marginBottom: 20,
     alignItems: "center",
