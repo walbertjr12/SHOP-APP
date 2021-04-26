@@ -22,9 +22,9 @@ export default function Login() {
         <CreateAccount />
       </View>
       <Divider style={styles.divider} />
-      <View style={styles.viewContainer}>
+      {/* <View style={styles.viewContainer}>
         <LoginFacebook toastRef={toastRef} />
-      </View>
+      </View> */}
       <Toast ref={toastRef} position="center" opacity={0.9} />
     </KeyboardAwareScrollView>
   );
