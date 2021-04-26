@@ -16,7 +16,6 @@ export default function LoginForm(props) {
   const [loading, setLoading] = useState(false);
 
   const onSubmit = () => {
-    console.log(formData);
     if (isEmpty(formData.email) || isEmpty(formData.password)) {
       toastRef.current.show("Todos los campos son obligatorios");
     } else if (!validateEmail(formData.email)) {
@@ -28,7 +27,6 @@ export default function LoginForm(props) {
         .signInWithEmailAndPassword(formData.email, formData.password)
         .then((response) => {
           setLoading(false);
-          navigation.goBack();
         })
         .catch(() => {
           setLoading(false);

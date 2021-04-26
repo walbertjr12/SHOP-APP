@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Shop-App",
-    "slug": "Shop-App",
+    "name": "AutoRepuestos",
+    "slug": "AutoRepuestos",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
