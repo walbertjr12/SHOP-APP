@@ -12,7 +12,6 @@ export default function Account() {
       !user ? setLogin(false) : setLogin(true);
     });
   }, []);
-
   if (login === null) return <Loading isVisible={true} text="Cargando..." />;
 
   return login ? <UserLogged /> : <UserGuest />;

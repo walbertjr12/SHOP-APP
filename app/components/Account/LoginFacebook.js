@@ -17,8 +17,6 @@ export default function LoginFacebook(props) {
       permissions: FacebookApi.permissions,
     });
 
-    console.log(token);
-
     if (type === "success") {
       setLoading(true);
       const credentials = firebase.auth.FacebookAuthProvider.credential(token);
@@ -30,9 +28,10 @@ export default function LoginFacebook(props) {
           setLoading(false);
           navigation.navigate("account");
         })
-        .catch(() => {
+        .catch((error) => {
           setLoading(false);
           toastRef.current.show("Credenciales incorrectas.");
+          console.log(error)
         });
     } else if (type === "cancel") {
       toastRef.current.show("Inicio de sesión cancelado");

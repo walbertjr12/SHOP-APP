@@ -16,36 +16,35 @@ export default function Navigation() {
     <NavigationContainer>
       <Tab.Navigator
         initialRouteName="restaurants"
-        tabBarOptions={{
-          inactiveTintColor: "#646464",
-          activeTintColor: "#00a680",
-        }}
         screenOptions={({ route }) => ({
           tabBarIcon: ({ color }) => screenOptions(route, color),
+          tabBarActiveTintColor: "#00a680",
+          tabBarInactiveTintColor: "#646464",
+          headerShown: false
         })}
       >
         <Tab.Screen
-          name="restaurants"
+          name="restaurantsStack"
           component={RestaurantsStack}
           options={{ title: "Restaurantes" }}
         />
         <Tab.Screen
-          name="favorites"
+          name="favoritesStack"
           component={FavoritesStack}
           options={{ title: "Favoritos" }}
         />
         <Tab.Screen
-          name="top-restaurants"
+          name="top-restaurantsStack"
           component={TopRestaurantsStack}
           options={{ title: "Top 5" }}
         />
         <Tab.Screen
-          name="search"
+          name="searchStack"
           component={SearchStack}
           options={{ title: "Buscar" }}
         />
         <Tab.Screen
-          name="account"
+          name="accountStack"
           component={AccountStack}
           options={{ title: "Cuenta" }}
         />
@@ -58,19 +57,19 @@ function screenOptions(route, color) {
   let iconName;
 
   switch (route.name) {
-    case "restaurants":
+    case "restaurantsStack":
       iconName = "compass-outline";
       break;
-    case "favorites":
+    case "favoritesStack":
       iconName = "heart-outline";
       break;
-    case "top-restaurants":
+    case "top-restaurantsStack":
       iconName = "star-outline";
       break;
-    case "search":
+    case "searchStack":
       iconName = "magnify";
       break;
-    case "account":
+    case "accountStack":
       iconName = "home-outline";
       break;
     default:
