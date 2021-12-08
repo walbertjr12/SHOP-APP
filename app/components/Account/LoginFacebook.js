@@ -11,7 +11,7 @@ export default function LoginFacebook(props) {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const login = async () => {
-    await Facebook.initializeAsync(FacebookApi.application_id);
+    await Facebook.initializeAsync({application_id: FacebookApi.application_id, permissions: FacebookApi.permissions});
 
     const { type, token } = await Facebook.logInWithReadPermissionsAsync({
       permissions: FacebookApi.permissions,
@@ -31,6 +31,7 @@ export default function LoginFacebook(props) {
         .catch((error) => {
           setLoading(false);
           toastRef.current.show("Credenciales incorrectas.");
+          console.log(token)
           console.log(error)
         });
     } else if (type === "cancel") {
@@ -48,7 +49,7 @@ export default function LoginFacebook(props) {
         type="facebook"
         onPress={login}
       />
-      <Loading isVisible={loading} text="Iniciando Sesión" />
+      <Loading isVisible={loading} text="Iniciando Sesión"/>
     </>
   );
 }
